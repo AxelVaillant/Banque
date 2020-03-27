@@ -41,10 +41,8 @@ public class CompteController {
 	@PutMapping("/update/{id}")
 	public Compte updateCompte(@PathVariable long id, @RequestBody Compte compte) {
 		Compte comptemodif=compteservice.getCompteById(id);
-		comptemodif.setNomcompte(compte.getNomcompte());
-		comptemodif.setClient(compte.getClient());
 		comptemodif.setConseiller(compte.getConseiller());
-		comptemodif.setSoldecompte(compte.getSoldecompte());
+		
 		return compteservice.updateCompte(compte);
 	
 }}

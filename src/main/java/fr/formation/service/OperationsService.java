@@ -6,13 +6,18 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.formation.models.Compte;
 import fr.formation.models.Operations;
+import fr.formation.repository.ICompteRepository;
 import fr.formation.repository.IOperationsRepository;
 @Service
 public class OperationsService implements IOperationsService {
 @Autowired
 	IOperationsRepository operationsrepository;
+@Autowired
+ICompteRepository compterepository;
 	@Override
+
 	public List<Operations> getAllOperations() {
 		
 		return operationsrepository.findAll();
@@ -30,6 +35,23 @@ public class OperationsService implements IOperationsService {
 
 	@Override
 	public Operations createOperations(Operations operations) {
+		Compte emetteur =operations.getEmetteur();
+		Compte receveur=operations.getReceveur();
+		
+		Optional<Compte> compte1 = compterepository.findById(emetteur.getIdcompte());
+		Optional<Compte> compte2 = compterepository.findById(receveur.getIdcompte());
+		
+		if(compte1.isPresent() && compte2.isPresent()) {
+			emetteur=compte1.get();
+			receveur=compte2.get();
+			
+			receveur.setSoldecompte(receveur.getSoldecompte()+operations.getMontant());
+			emetteur.setSoldecompte(emetteur.getSoldecompte()-operations.getMontant());
+		
+		compterepository.save(emetteur);
+		compterepository.save(receveur);
+		}
+		
 		
 		return operationsrepository.save(operations);
 	}

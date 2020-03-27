@@ -11,4 +11,7 @@ public interface IUserService {
 	public User createUser(User user);
 	public long deleteUser(long id);
 	public User updateUser(User user);
+	public User identification(String nomuser, String password);
+	public User getByLogin(String nomuser);
+	
 }
